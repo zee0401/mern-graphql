@@ -1,6 +1,11 @@
 const userResolver = {
   Query: {
-    getUsers: (_, args, context) => {},
+    getUsers: () => {
+      return users;
+    },
+    user: (_, { userId }) => {
+      return users.find((user) => user._id === userId);
+    },
   },
   Mutation: {},
 };
