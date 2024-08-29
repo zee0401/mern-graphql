@@ -8,7 +8,7 @@ const TransactiontypeDefs = `#graphql
     }
     type Query{
         getTransactions:[Transaction]!
-        transaction(id:ID!):Transaction
+        transaction(transactionId:ID!):Transaction
     }
 
     type Mutation{
