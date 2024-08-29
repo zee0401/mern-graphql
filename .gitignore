@@ -42,3 +42,6 @@ dump/
 # Miscellaneous
 *.swp
 *.swo
+frontend/.gitignore
+.gitignore
+
