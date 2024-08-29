@@ -11,13 +11,13 @@ import passport from "passport";
 import session from "express-session";
 import connectMongo from "connect-mongodb-session";
 
-import mergedTypeDefs from "./typeDefs/index.js";
-import mergedResolvers from "./resolvers/index.js";
+import mergedTypeDefs from "./backend/typeDefs/index.js";
+import mergedResolvers from "./backend/resolvers/index.js";
 
-import { connectDB } from "./database/connectDB.js";
+import { connectDB } from "./backend/database/connectDB.js";
 import { buildContext } from "graphql-passport";
 
-import { configurePassport } from "./passport/passport.config.js";
+import { configurePassport } from "./backend/passport/passport.config.js";
 
 const app = express();
 dotenv.config();
@@ -59,7 +59,7 @@ const server = new ApolloServer({
 await server.start();
 
 app.use(
-  "/",
+  "/graphql",
   cors({
     origin: "http://localhost:3000",
     credentials: true,
