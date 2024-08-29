@@ -1,5 +1,6 @@
-import bcrypt from "bcryptjs";
+import Transaction from "../models/transaction.model.js";
 import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 
 const userResolver = {
   Query: {
@@ -25,11 +26,11 @@ const userResolver = {
   Mutation: {
     signUp: async (_, { input }, context) => {
       try {
-        const { userName, name, gender, password } = input;
-        if (!userName || !name || !gender || !password) {
-          throw new Error("Please provide all the required fields");
+        const { username, name, gender, password } = input;
+        if (!username || !name || !password || !gender) {
+          throw new Error("All fields are required");
         }
-        const existingUser = await User.findOne({ userName });
+        const existingUser = await User.findOne({ username });
         if (existingUser) {
           throw new Error("User already exists");
         }
@@ -39,7 +40,7 @@ const userResolver = {
         const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
         const newUser = new User({
-          userName,
+          username,
           name,
           gender,
           password: hashedpassword,
@@ -56,26 +57,25 @@ const userResolver = {
       try {
         const { username, password } = input;
         if (!username || !password) throw new Error("All fields are required");
-        const { user } = await context.authenticate("graphql-auth", {
+        const { user } = await context.authenticate("graphql-local", {
           username,
           password,
         });
+
         await context.login(user);
         return user;
-      } catch (error) {
-        console.error("error in Login resolver", error);
-        throw new Error(error.message || "login error");
+      } catch (err) {
+        console.error("Error in login:", err);
+        throw new Error(err.message || "Internal server error");
       }
     },
     logout: async (_, __, context) => {
       try {
         await context.logout();
-        req.session.destroy((err) => {
-          if (err) {
-            console.error("error in logout resolver", err);
-          }
+        context.req.session.destroy((err) => {
+          if (err) throw err;
         });
-        res.clearCookie("connect.sid");
+        context.res.clearCookie("connect.sid");
         return { message: "logged out successfully" };
       } catch (error) {
         console.error("error in logout resolver", error);

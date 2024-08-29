@@ -19,9 +19,9 @@ import { buildContext } from "graphql-passport";
 
 import { configurePassport } from "./backend/passport/passport.config.js";
 
-const app = express();
-dotenv.config();
 configurePassport();
+dotenv.config();
+const app = express();
 
 const httpServer = http.createServer(app);
 
@@ -29,7 +29,7 @@ const MongoDBStore = connectMongo(session);
 
 const store = new MongoDBStore({
   uri: process.env.MONGODB_URI,
-  Collection: "sessions",
+  collection: "sessions",
 });
 
 store.on("error", (err) => {
@@ -41,8 +41,10 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
-    httpOnly: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    },
     store: store,
   })
 );
@@ -66,7 +68,7 @@ app.use(
   }),
   express.json(),
   expressMiddleware(server, {
-    context: async ({ req, res }) => buildContext({ req }),
+    context: async ({ req, res }) => buildContext({ req, res }),
   })
 );
 

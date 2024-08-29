@@ -5,11 +5,11 @@ const userSchema = mongoose.Schema(
     username: {
       type: String,
       required: true,
-      unqiue: true,
+      unique: true,
     },
     gender: {
       type: String,
-      enum: ["Male", "Female"],
+      enum: ["male", "female"],
     },
     name: {
       type: String,
