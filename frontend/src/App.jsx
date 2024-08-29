@@ -1,14 +1,25 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import { Routes, Route } from "react-router-dom";
+
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Transaction from "./pages/Transaction";
+import NotFound from "./pages/NotFound";
+import Header from "./components/Header";
 
 function App() {
-  const [count, setCount] = useState(0);
-
+  const authUser = true;
   return (
     <>
-      <h1 className="underline text-red-800">Hello Vite!</h1>
+      {authUser && <Header />}
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/transaction/:id" element={<Transaction />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
   );
 }
