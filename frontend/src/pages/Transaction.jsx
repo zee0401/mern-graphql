@@ -1,18 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { GET_TRANSACTION } from "../graphql/quries/transaction.query";
+import { useMutation, useQuery } from "@apollo/client";
+import { UPDATE_TRANSACTION } from "../graphql/mutations/transaction.mutations";
 
 const Transaction = () => {
-  const [formData, setFormData] = useState({
-    description: "",
-    paymentType: "",
-    category: "",
-    amount: "",
-    location: "",
-    date: "",
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { data } = useQuery(GET_TRANSACTION, {
+    variables: { transactionId: id },
   });
+  const [formData, setFormData] = useState({
+    description: data?.transaction?.description || "",
+    paymentType: data?.transaction?.paymentType || "",
+    category: data?.transaction?.category || "",
+    amount: data?.transaction?.amount || "",
+    location: data?.transaction?.location || "",
+    date: data?.transaction?.date || "",
+  });
+
+  const [updateTransaction, { loading: loadingUdate }] =
+    useMutation(UPDATE_TRANSACTION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("formData", formData);
+    const amount = parseFloat(formData.amount);
+    try {
+      await updateTransaction({
+        variables: {
+          input: {
+            transactionId: id,
+            description: formData.description,
+            paymentType: formData.paymentType,
+            category: formData.category,
+            amount: amount,
+            location: formData.location,
+            date: formData.date,
+          },
+        },
+      });
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,7 +52,19 @@ const Transaction = () => {
     }));
   };
 
-  // if (loading) return <TransactionFormSkeleton />;
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        description: data?.transaction?.description || "",
+        paymentType: data?.transaction?.paymentType || "",
+        category: data?.transaction?.category || "",
+        amount: data?.transaction?.amount || "",
+        location: data?.transaction?.location || "",
+        date: new Date(+data.transaction.date).toISOString().substr(0, 10),
+      });
+    }
+  }, [data]);
+  if (loadingUdate) return "Loading...";
 
   return (
     <div className="h-screen max-w-4xl mx-auto flex flex-col items-center">

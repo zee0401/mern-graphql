@@ -41,9 +41,9 @@ const transactionResolver = {
         throw new Error("Error creating transaction");
       }
     },
-    updateTransaction: async (_, { input }, context) => {
+    updateTransaction: async (_, { input }) => {
       try {
-        const updatedtransaction = await Transaction.findByIdandUpdate(
+        const updatedtransaction = await Transaction.findByIdAndUpdate(
           input.transactionId,
           input,
           { new: true }
@@ -54,11 +54,9 @@ const transactionResolver = {
         throw new Error("error in updating transaction");
       }
     },
-    deleteTransaction: async (_, { transactionId }, context) => {
+    deleteTransaction: async (_, { id }, context) => {
       try {
-        const deletedTransaction = await Transaction.findByIdAndDelete(
-          transactionId
-        );
+        const deletedTransaction = await Transaction.findByIdAndDelete(id);
         return deletedTransaction;
       } catch (err) {
         console.log("error in deleting transaction", err);
