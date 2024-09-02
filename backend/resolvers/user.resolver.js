@@ -83,6 +83,17 @@ const userResolver = {
       }
     },
   },
+  User: {
+    transactions: async (parent) => {
+      try {
+        const transactions = await Transaction.find({ userId: parent._id });
+        return transactions;
+      } catch (error) {
+        console.error("error in transactions resolver", error);
+        throw new Error(error.message || "transactions resolver e Error");
+      }
+    },
+  },
 };
 
 export default userResolver;

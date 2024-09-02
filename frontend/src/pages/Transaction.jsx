@@ -19,6 +19,8 @@ const Transaction = () => {
     date: data?.transaction?.date || "",
   });
 
+  console.log(data, "data with user");
+
   const [updateTransaction, { loading: loadingUdate }] =
     useMutation(UPDATE_TRANSACTION);
 
