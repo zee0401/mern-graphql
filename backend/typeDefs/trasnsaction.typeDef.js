@@ -1,10 +1,15 @@
 const TransactiontypeDefs = `#graphql
 
     type Transaction{
-        id:ID!
-        userId:ID!
-        date:String!
-        amount:Float!
+        _id: ID!
+    userId: ID!
+    description: String!
+    paymentType: String!
+    category: String!
+    amount: Float!
+    location: String
+    date: String!
+    user: User!
     }
     type Query{
         getTransactions:[Transaction]!
@@ -18,18 +23,21 @@ const TransactiontypeDefs = `#graphql
     }
 
     input createTransactionInput{
-        description:String!
-        amount:Float!
-        category:String!
-        location:String!
-        date:String!
+        description: String!
+        paymentType: String!
+        category: String!
+        amount: Float!
+        date: String!
+        location: String
     }
+
     input updateTransactionInput{
         transactionId:ID!
         description:String
         amount:Float
         category:String
         location:String
+        paymentType:String
         date:String
     }
 

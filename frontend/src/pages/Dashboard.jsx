@@ -9,7 +9,6 @@ import { MdLogout } from "react-icons/md";
 import { useMutation } from "@apollo/client";
 import { LOGOUT } from "../graphql/mutations/user.mutations";
 import toast from "react-hot-toast";
-
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dashboard = () => {
